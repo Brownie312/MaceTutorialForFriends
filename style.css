@@ -175,4 +175,19 @@ section#resource {
     height: 100%;
     background: #38e038;
     transition: width 0.2s;
+
+}
+/* Optimized Video Stack */
+.video-stack video {
+    display: block;
+    margin: 14px auto;
+    width: 100%;
+    max-width: 600px;
+    /* This reserves space so the page doesn't jump */
+    aspect-ratio: 16 / 9; 
+    background-color: #000; /* Keeps a clean black box while loading */
+    border: 3px solid #bfbfbf;
+    border-radius: 4px;
+    /* Hardware acceleration hint for browsers */
+    will-change: transform; 
 }
