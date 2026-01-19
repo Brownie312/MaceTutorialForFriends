@@ -94,7 +94,7 @@ section h2 {
 
 /* --- THE FIX: Images vs Videos --- */
 
-/* Fixed: Images now support transparency (No black background) */
+/* --- Videos & Images (Restored) --- */
 section img {
     display: block;
     width: 100%;
@@ -102,19 +102,18 @@ section img {
     margin: 20px auto;
     border: 4px solid #bfbfbf;
     border-radius: 4px;
-    background: transparent; 
+    background: transparent !important; /* Forces no black background ever */
 }
 
-/* Fixed: Videos keep the black background and aspect ratio for stability */
 .video-stack video {
     display: block;
     width: 100%;
-    max-width: 700px;
+    max-width: 700px; /* Limits width but keeps original height ratio */
+    height: auto;     /* Fixes the "weird" stretching/format */
     margin: 24px auto;
     border: 4px solid #bfbfbf;
     border-radius: 4px;
-    background: #000;
-    aspect-ratio: 16 / 9;
+    background: transparent; /* No black boxes while loading */
 }
 
 /* --- Buttons & Links --- */
@@ -224,3 +223,4 @@ section img {
     .nav-tabs { flex-direction: column; }
     .nav-tabs button, .download-link { width: 100%; }
 }
+
