@@ -38,9 +38,8 @@ function setupInteractions() {
     }
 }
 
-// --- PART 2: LOADING SCREEN LOGIC ---
+// --- PART 2: LOADING SCREEN & PERFORMANCE ---
 document.addEventListener("DOMContentLoaded", () => {
-    // Run tab setup
     setupInteractions();
 
     const images = document.querySelectorAll('section img');
@@ -61,10 +60,7 @@ document.addEventListener("DOMContentLoaded", () => {
             let percentage = (loadedCount / totalItems) * 100;
             progressFill.style.width = percentage + "%";
         }
-
-        if (loadedCount >= totalItems) {
-            hideLoader();
-        }
+        if (loadedCount >= totalItems) { hideLoader(); }
     }
 
     function hideLoader() {
@@ -72,28 +68,35 @@ document.addEventListener("DOMContentLoaded", () => {
             loader.style.opacity = "0";
             setTimeout(() => { 
                 loader.style.display = "none"; 
-                // This ensures the "invisible wall" is gone
                 loader.style.pointerEvents = "none"; 
             }, 500);
         }
     }
 
-    // Image Tracking
     images.forEach(img => {
-        if (img.complete) {
-            updateProgress();
-        } else {
-            img.onload = updateProgress;
-            img.onerror = updateProgress;
-        }
+        if (img.complete) updateProgress();
+        else { img.onload = updateProgress; img.onerror = updateProgress; }
     });
 
-    // Video Tracking
     videos.forEach(v => {
         v.onloadeddata = updateProgress;
         v.onerror = updateProgress;
     });
     
-    // Safety Timeout (Force show site after 10 seconds if a video hangs)
     setTimeout(hideLoader, 10000); 
+
+    // --- VIDEO PERFORMANCE FIX: Play only when visible ---
+    const videoObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.play().catch(() => {
+                    // Prevents errors if browser blocks autoplay
+                });
+            } else {
+                entry.target.pause();
+            }
+        });
+    }, { threshold: 0.1 }); // Starts playing as soon as 10% of the video is seen
+
+    videos.forEach(v => videoObserver.observe(v));
 });
